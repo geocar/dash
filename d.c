@@ -49,7 +49,7 @@ k(d,"dash",kpn(p+b,i-b),0,0);b=i+1;continue;
 }z=0;}else if(z>=0&&(z < 10 && (p[i]=="CONNECTION"[z] || p[i]=="connection"[z])))++z;else if(z==10){z=(p[i]==' '||p[i]==':')?10:-1;c=p[i];}else z=-1;
 }
 #define BUFSZ 8192
-ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[BUFSZ];I r,f,k,d;
+ZV sa(I n){
 #ifdef __APPLE__
 extern int thread_policy_set(thread_t thread, thread_policy_flavor_t flavor, thread_policy_t policy_info, mach_msg_type_number_t count);
 {thread_extended_policy_data_t ep;ep.timeshare=FALSE;thread_policy_set(mach_thread_self(),THREAD_EXTENDED_POLICY,(thread_policy_t)&ep,THREAD_EXTENDED_POLICY_COUNT);
@@ -57,7 +57,8 @@ extern int thread_policy_set(thread_t thread, thread_policy_flavor_t flavor, thr
 #else
 {cpu_set_t c;CPU_ZERO(&c);CPU_SET(n,&c);pthread_setaffinity_np(pthread_self(),sizeof(c),&c);}
 #endif
-d=-khpu("127.0.0.1",1234,"dash");
+}
+ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[BUFSZ];I r,f,k,d; sa(n+1);d=-khpu("127.0.0.1",1234,"dash");
   pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);
 
 for(;;)DO(Qw(k,q,-1),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b)||r<0)poop(f);else if(r>0)http(d,f,b,r))}
@@ -74,5 +75,5 @@ int main(int argc,char *argv[]){
   sin.sin_addr.s_addr=INADDR_ANY;sin.sin_port=htons(8080);if(0>bind(s,(struct sockaddr*)&sin,sizeof(sin)))oops("bind");
   t=sysconf(_SC_NPROCESSORS_ONLN);if(t<2)t=2;if(0>listen(s,t*n))oops("listen");--t;
   td=ktn(KI,t);DO(t,kI(td)[i]=-1);DO(t,if(pthread_create(&id,&a,(V*)run,(V*)i)==-1)oops("pthread_create"));
-  while(busy(t)){pthread_mutex_lock(&tm);pthread_cond_wait(&tc,&tm);pthread_mutex_unlock(&tm);}
+  sa(0);while(busy(t)){pthread_mutex_lock(&tm);pthread_cond_wait(&tc,&tm);pthread_mutex_unlock(&tm);}
   loop(s,t);R 0;}
