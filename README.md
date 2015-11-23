@@ -47,4 +47,4 @@ and KDB's built-in webserver gets 2k queries per second:
 
 #Configuring
 
-Currently hardcoded to [listen on port 8080](d.c#L75) and connect to kdb on [port 1234](d.c#L61), and it serves [32-byte blank gifs](/geocar/dash/blob/master/d.c#L47).
+Currently hardcoded to [listen on port 8080](d.c#L75) and connect to kdb on [port 1234](d.c#L61), and it serves [32-byte blank gifs](d.c#L47).
