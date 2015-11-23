@@ -19,19 +19,17 @@ after the client disconnects.
 
 #Performance
 
-This was written on a sunday afternoon, so I imagine there are improvements
-that can be made, nevertheless it's already pretty fast.
+On a mid-2012 Macbook Air I get about 51k requests per second on localhost:
 
-On a mid-2012 Macbook Air I get about 38k requests per second on localhost:
-
-    Geos-Air:~ geocar$ wrk -t2 -c90 -d9s http://127.0.0.1:8080/
-    Running 9s test @ http://127.0.0.1:8080/
+    Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
       2 threads and 90 connections
       Thread Stats   Avg      Stdev     Max   +/- Stdev
-        Latency     2.36ms  145.04us   5.16ms   82.00%
-        Req/Sec    19.03k   335.33    19.99k    71.11%
-      341045 requests in 9.00s, 39.03MB read
-    Requests/sec:  37878.01
+        Latency     4.61ms   15.97ms 140.72ms   96.15%
+        Req/Sec    26.44k     6.12k   47.58k    86.21%
+      154692 requests in 3.01s, 9.15MB read
+    Requests/sec:  51310.63
+    Transfer/sec:      3.03MB
 
 In comparison, nodeJS gets 10k queries per second:
 
@@ -44,7 +42,12 @@ and KDB's built-in webserver gets 2k queries per second:
     \p 8080
     .z.ph:{.h.hy[`html;"ok"]}
 
-
 #Configuring
 
-Currently hardcoded to [listen on port 8080](d.c#L81) and connect to kdb on [port 1234](d.c#L64), and it serves [32-byte blank gifs](d.c#L48).
+Port numbers are configured using environment variables:
+
+    http=8080 kdb=127.0.0.1:1234 ./d.darwin
+
+The HTTP response is a blank gif if `?f=gif` is provided in the query string,
+and an HTTP 204 otherwise.
+
