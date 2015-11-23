@@ -58,8 +58,9 @@ extern int thread_policy_set(thread_t thread, thread_policy_flavor_t flavor, thr
 {cpu_set_t c;CPU_ZERO(&c);CPU_SET(n,&c);pthread_setaffinity_np(pthread_self(),sizeof(c),&c);}
 #endif
 }
-ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[BUFSZ];I r,f,k,d; sa(n+1);d=-khpu("127.0.0.1",1234,"dash");
-  pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);
+ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[BUFSZ];I r,f,k,d; sa(n+1);d=khpu("127.0.0.1",1234,"dash");
+  k=1048576;if(-1==setsockopt(d,SOL_SOCKET,SO_SNDBUF,&k,sizeof(d)))oops("SNDBUF");
+  pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);d=-d;//async
 
 for(;;)DO(Qw(k,q,-1),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b)||r<0)poop(f);else if(r>0)http(d,f,b,r))}
 ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=1;for(;;)if(-1!=(f=accept(s,0,0))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));fcntl(f,F_SETFL,O_NONBLOCK);Qa(kI(td)[r],f);++r;r=r%t;}}
