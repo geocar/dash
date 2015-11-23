@@ -70,7 +70,7 @@ int main(int argc,char *argv[]){
   pthread_attr_t a;P(pthread_attr_init(&a)==-1||pthread_attr_setscope(&a,PTHREAD_SCOPE_SYSTEM)==-1||pthread_attr_setdetachstate(&a,PTHREAD_CREATE_DETACHED)==-1,oops("pthread_attr_init"));
   o=1;setsockopt(s=socket(sin.sin_family=AF_INET,SOCK_STREAM,IPPROTO_TCP),SOL_SOCKET,SO_REUSEADDR,&o,sizeof(o));lf.l_onoff=1;lf.l_linger=0;setsockopt(s,SOL_SOCKET,SO_LINGER,&lf,sizeof(lf));
 #ifdef __linux__
-  o=5;setsockopt(sdf,SOL_TCP,TCP_DEFER_ACCEPT,&o,sizeof(o));
+  o=5;setsockopt(s,SOL_TCP,TCP_DEFER_ACCEPT,&o,sizeof(o));
 #endif
   sin.sin_addr.s_addr=INADDR_ANY;sin.sin_port=htons(8080);if(0>bind(s,(struct sockaddr*)&sin,sizeof(sin)))oops("bind");
   t=sysconf(_SC_NPROCESSORS_ONLN);if(t<2)t=2;if(0>listen(s,t*n))oops("listen");--t;
