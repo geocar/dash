@@ -65,7 +65,7 @@ ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[BUFSZ];I h,r,f,k,d,c; sa(n+1);d=khpu("127
   k=1048576;if(-1==setsockopt(d,SOL_SOCKET,SO_SNDBUF,&k,sizeof(d)))oops("SNDBUF"); sc(d,1);
   pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);d=-d;//async
 
-for(c=-1;;){DO(h=Qw(k,q,c),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b)||r<0)poop(f);else if(r>0)if(http(d,f,b,r))c=1);if(!h){sc(d,0);sc(d,1);c=-1;}}
+for(c=-1;;){DO(h=Qw(k,q,c),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b)||r<0)poop(f);else if(r>0)if(http(d,f,b,r))c=1);if(h<=0){sc(d,0);sc(d,1);c=-1;}}
 }
 
 ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=1;for(;;)if(-1!=(f=accept(s,0,0))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));fcntl(f,F_SETFL,O_NONBLOCK);Qa(kI(td)[r],f);++r;r=r%t;}}
