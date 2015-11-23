@@ -8,14 +8,23 @@ the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
     q/c/m64/c.o
 
 #Usage
-
-This is a special-purpose webserver that always returns a specific
+[d.c](d.c) is a special-purpose webserver that always returns a specific
 static content.
 
 A number of tasks involve collecting data from web browsers which
 can basically call a URL, however the URL always responds with
 a HTTP 204 or a blank gif and the actual request can be processed
 after the client disconnects.
+
+Port numbers are configured using environment variables:
+
+    http=8080 kdb=127.0.0.1:1234 ./d.darwin
+
+The HTTP response is a blank gif if `?f=gif` is provided in the query string,
+and an HTTP 204 otherwise.
+
+KDB must implement a function `dash` which takes the HTTP message as an argument.
+
 
 #Performance
 
@@ -41,13 +50,4 @@ and KDB's built-in webserver gets 2k queries per second:
 
     \p 8080
     .z.ph:{.h.hy[`html;"ok"]}
-
-#Configuring
-
-Port numbers are configured using environment variables:
-
-    http=8080 kdb=127.0.0.1:1234 ./d.darwin
-
-The HTTP response is a blank gif if `?f=gif` is provided in the query string,
-and an HTTP 204 otherwise.
 
