@@ -97,7 +97,8 @@ The motivation for [d.c](d.c).
 
 ##Linux 3.18.21 on 3.50GHz XEON
 
-This is a [Cadence Time Series appliance](https://www.scalableinformatics.com/cadence):
+This is a [Cadence Time Series appliance](https://www.scalableinformatics.com/cadence)
+running the 8-core model.
 
 ###Async: 135k/sec
 
