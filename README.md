@@ -58,7 +58,7 @@ and for sync-messages (.z.ph replacement) I get around 6k requests per second:
 
 using the following:
 
-    dash:{L::(x;y);"HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\n<b>ok"}
+    dash:{L::x;"HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\n<b>ok"}
 
 In comparison, nodeJS gets 10k queries per second on my laptop:
 
