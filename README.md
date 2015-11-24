@@ -137,7 +137,7 @@ running the 8-core model.
     Requests/sec:  21424.52
     Transfer/sec:      2.31MB
 
-###KDB: 2k/sec
+###KDB: 27k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:1234/'
     Running 3s test @ http://127.0.0.1:1234/
