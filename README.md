@@ -43,18 +43,17 @@ On a mid-2012 Macbook Air, for async messages, I get about 51k requests per seco
     Requests/sec:  51310.63
     Transfer/sec:      3.03MB
 
-and for sync-messages (.z.ph replacement) I get around 6k requests per second:
+and for sync-messages (.z.ph replacement) I get around 25k requests per second:
 
-    Geos-Air:~ geocar$ wrk -t2 -c90 -d9s 'http://127.0.0.1:8080/?k=hi&v=1'
-    Running 9s test @ http://127.0.0.1:8080/?k=hi&v=1
+    Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
       2 threads and 90 connections
       Thread Stats   Avg      Stdev     Max   +/- Stdev
-        Latency    11.11ms   11.50ms 112.05ms   87.14%
-        Req/Sec     3.40k   484.83     4.61k    88.89%
-      61050 requests in 9.07s, 5.36MB read
-      Socket errors: connect 0, read 61042, write 0, timeout 0
-    Requests/sec:   6728.89
-    Transfer/sec:    604.55KB
+        Latency     3.73ms  497.42us  11.81ms   91.29%
+        Req/Sec    12.13k   691.11    12.88k    90.32%
+      74857 requests in 3.10s, 6.57MB read
+    Requests/sec:  24136.76
+    Transfer/sec:      2.12MB
 
 using the following:
 
