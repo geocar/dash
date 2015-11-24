@@ -18,7 +18,7 @@ the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
 #Usage
 Port numbers are configured using environment variables:
 
-    http=8080 kdb=127.0.0.1:1234 ./d.darwin
+    http=:8080 kdb=127.0.0.1:1234 ./d.darwin
 
 The HTTP response is a blank gif if `?f=gif` is provided in the query string,
 and an HTTP 204 for `?f=204`.
