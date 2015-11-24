@@ -30,8 +30,22 @@ KDB must implement a function `dash` which works like `.z.ph`, except note: you 
 in the response when it is appropriate to do so.
 
 #Performance
+##Setup
 
-On a mid-2012 Macbook Air, for async messages, I get about 51k requests per second on localhost:
+KDB+ is configured as:
+
+    \p 1234
+    .z.ph:{.h.hy[`html;"ok"]}
+    dash:{L::x;"HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\n<b>ok"}
+
+NodeJS is configured as:
+
+    require("http").createServer(function(req,res){
+      res.writeHead(200);res.end()
+    }).listen(3000)
+
+##OSX 10.11.1 on Mid-2012 Macbook Air (2GHz i7)
+###Async: 51k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -43,7 +57,7 @@ On a mid-2012 Macbook Air, for async messages, I get about 51k requests per seco
     Requests/sec:  51310.63
     Transfer/sec:      3.03MB
 
-and for sync-messages (.z.ph replacement) I get around 25k requests per second:
+###Sync (.z.ph replacement): 25k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
@@ -55,18 +69,82 @@ and for sync-messages (.z.ph replacement) I get around 25k requests per second:
     Requests/sec:  24136.76
     Transfer/sec:      2.12MB
 
-using the following:
+###NodeJS: 10k/sec
 
-    dash:{L::x;"HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\n<b>ok"}
+    Geos-Air:~ geocar$ wrk -t2 -c90 -d9s 'http://127.0.0.1:3000/'
+    Running 9s test @ http://127.0.0.1:3000/
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     8.65ms    1.46ms  63.20ms   96.41%
+        Req/Sec     5.25k   445.35     5.76k    91.67%
+      93997 requests in 9.01s, 10.13MB read
+    Requests/sec:  10437.06
+    Transfer/sec:      1.12MB
 
-In comparison, nodeJS gets 10k queries per second on my laptop:
+###KDB: 2k/sec
 
-    require("http").createServer(function(req,res){
-      res.writeHead(200);res.end()
-    }).listen(8080)
+The motivation for [d.c](d.c).
 
-and KDB's built-in webserver gets 2k queries per second:
+    Geos-Air:~ geocar$ wrk -t2 -c90 -d9s 'http://127.0.0.1:1234/'
+    Running 9s test @ http://127.0.0.1:1234/
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency    23.56ms   94.75ms 790.67ms   96.31%
+        Req/Sec     3.28k   774.95     3.83k    93.88%
+      16431 requests in 9.10s, 1.36MB read
+    Requests/sec:   1804.94
+    Transfer/sec:    153.35KB
 
-    \p 8080
-    .z.ph:{.h.hy[`html;"ok"]}
+##Linux 3.18.21 on 3.50GHz XEON
+
+This is a [Cadence Time Series appliance](https://www.scalableinformatics.com/cadence):
+
+###Async: 135k/sec
+
+    $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     1.98ms   14.37ms 227.27ms   98.58%
+        Req/Sec    67.71k    10.92k   80.98k    58.33%
+      404058 requests in 3.00s, 23.89MB read
+    Requests/sec: 134619.41
+    Transfer/sec:      7.96MB
+
+###Sync (.z.ph replacement): 62k/sec
+
+    $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     2.92ms   14.03ms 199.54ms   98.60%
+        Req/Sec    31.51k     1.49k   33.87k    93.33%
+      188080 requests in 3.00s, 16.50MB read
+    Requests/sec:  62663.59
+    Transfer/sec:      5.50MB
+
+
+###NodeJS: 21k/sec
+
+    $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:3000/?k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:3000/?k=hi&v=1
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     4.30ms    1.67ms  36.76ms   97.84%
+        Req/Sec    10.77k     1.31k   11.49k    93.33%
+      64309 requests in 3.00s, 6.93MB read
+    Requests/sec:  21424.52
+    Transfer/sec:      2.31MB
+
+###KDB: 2k/sec
+
+    $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:1234/'
+    Running 3s test @ http://127.0.0.1:1234/
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     3.17ms  312.83us   4.31ms   75.94%
+        Req/Sec    13.63k   590.50    15.90k    86.67%
+      81375 requests in 3.00s, 6.52MB read
+    Requests/sec:  27106.72
+    Transfer/sec:      2.17MB
 
