@@ -38,7 +38,7 @@ ZI Qq(V){R epoll_create1(0);}ZV Qa(I k,I f){struct epoll_event ev={0};ev.data.fd
 #else
 #include <sys/event.h>
 #define QSZ sizeof(struct kevent)
-I Qq(V){R kqueue();}ZV Qa(I k,I f){struct kevent ev;EV_SET(&ev,f,EVFILT_READ,EV_ADD|EV_CLEAR,0,NM,NULL);kevent(k,&ev,1,0,0,0);}ZI Qw(I k,V*x,I t){struct timespec tv={0};tv.tv_sec=1;R kevent(k,0,0,x,NM,t>0?&tv:0);}ZI Qf(I k,V*x){struct kevent*e=x,ev;I f;if(e->flags&EV_EOF){EV_SET(&ev,e->ident,EVFILT_READ,EV_DELETE,0,0,0);close(e->ident);kevent(k,&ev,1,0,0,0);f=-1;}else{/*signed*/f=e->ident;}R f;}
+I Qq(V){R kqueue();}ZV Qa(I k,I f){struct kevent ev;EV_SET(&ev,f,EVFILT_READ,EV_ADD|EV_CLEAR,0,NM,NULL);kevent(k,&ev,1,0,0,0);}ZI Qw(I k,V*x,I t){struct timespec tv={0};tv.tv_sec=5;R kevent(k,0,0,x,NM,t>0?&tv:0);}ZI Qf(I k,V*x){struct kevent*e=x,ev;I f;if(e->flags&EV_EOF){EV_SET(&ev,e->ident,EVFILT_READ,EV_DELETE,0,0,0);close(e->ident);kevent(k,&ev,1,0,0,0);f=-1;}else{/*signed*/f=e->ident;}R f;}
 #endif
 
 ZV sc(I f,I b,I*g){if(*g!=b)*g=b,setsockopt(f,IPPROTO_TCP,TCP_NOPUSH,&b,sizeof(b));} ZV sa(I n){
@@ -70,7 +70,7 @@ ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[8192];I h,r,f,k,d,c,sd=69; sa(n+1);d=khpu
   pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);//async
   for(c=-1;;){DO(h=Qw(k,q,c),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b))poop(f);else if(r>0)if(http(d,f,b,r,&sd))c=1);if(h<=0){sc(d,0,&sd);sc(d,1,&sd);c=-1;}}
 }
-ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=1;for(;;)if(-1!=(f=accept(s,0,0))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));fcntl(f,F_SETFL,O_NONBLOCK);Qa(kI(td)[r],f);++r;r=r%t;}}
+ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=5;for(;;)if(-1!=(f=accept(s,0,0))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));fcntl(f,F_SETFL,O_NONBLOCK);Qa(kI(td)[r],f);++r;r=r%t;}}
 ZI busy(I t){DO(t,if(((volatile)kI(td)[t])==-1)R 1);R 0;}
 ZS var(S x,S d){R (x=getenv(x))?x:d;}ZS hp(S x,I*p,I d){S c=strchr(x=strdup(x),':');*p=d;P(!c,x);*p=atoi(c+1);*c=0;R x;}
 int main(int argc,char *argv[]){
