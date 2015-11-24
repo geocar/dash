@@ -64,6 +64,7 @@ ZI http(I d,I f,C*p,I r){I i,o=0,b=0,s=0,w=0,g=0,e=0,c=0,cf=1,m=0;K q=0,a=ktn(11
   case':':if(!c)s=1+(c=i);break;
   case '/':if(!w)w=i+1;case '?':case '&':if(r>=(i+4)&&p[i+1]=='f'&&p[i+2]=='=')o=p[i+3];default: e=0;break;}}if(a)r0(a),r0(v);if(q)r0(q);R b;}
 ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[8192];I h,r,f,k,d,c; sa(n+1);d=khpu("127.0.0.1",kdbport,"dash");
+  k=1;setsockopt(d,IPPROTO_TCP,TCP_NODELAY,&k,sizeof(k));
   k=1048576;if(-1==setsockopt(d,SOL_SOCKET,SO_SNDBUF,&k,sizeof(d)))oops("SNDBUF"); sc(d,1);
   pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);//async
   for(c=-1;;){DO(h=Qw(k,q,c),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b))poop(f);else if(r>0)if(http(d,f,b,r))c=1);if(h<=0){sc(d,0);sc(d,1);c=-1;}}
