@@ -27,8 +27,6 @@ KDB must implement a function `dash` which works like `.z.ph`, except note: you 
 
     Connection: keep-alive
 
-in the response when it is appropriate to do so.
-
 #Performance
 ##Setup
 
