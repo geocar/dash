@@ -59,7 +59,7 @@ ZV poop(I f){cwrite(f,"HTTP/1.1 500 problem\r\nConnection:close\r\nContent-Lengt
 #define END204 "Content-Length: 0\r\n\r\n"
 ZI http(I d,I f,C*p,I r){I i,o=0,b=0,s=0,w=0,g=0,e=0,c=0,cf=1,m=0;K q=0,a=ktn(11,0),v=ktn(0,0);
   for(i=b=0;i<r;++i){switch(p[i]){
-  case'\n':if(!e)e=i;if(!q){q=kpn(p+w,g-w);if('\r'==(cf=p[i-1]))cf=p[i-2];}else if(!c){w=!!strchr("kK1",cf);if(!o){sc(-d,0);}else{if(w){if('g'==o)cwrite(f,OK("200","keep-alive")BLANK);else cwrite(f,OK("204","keep-alive")END204);}else{if('g'==o)cwrite(f,OK("200","close")BLANK);else cwrite(f,OK("204","close")END204);close(f);}}a=k(o?d:-d,"dash",q,xD(a,v),0);b=i+1;if(!o){if(!a){poop(f);R 0;}if(10!=a->t){r0(a);poop(f);R 0;}writer(f,kC(a),a->n);r0(a);if(w)close(f);}if(b==r)R 1;q=0;o=0;a=ktn(11,0),v=ktn(0,0);}else{if((c-m)==10&& !strncasecmp(p+m,"connection",c-m))cf=p[s];js(&a,sn(p+m,c-m));jk(&v,kpn(p+s,e-s));}w=e=g=s=c=0;m=i+1;break;
+  case'\n':if(!e)e=i;if(!q){q=kpn(p+w,g-w);if('\r'==(cf=p[i-1]))cf=p[i-2];}else if(!c){w=!!strchr("kK1",cf);if(!o){sc(d,0);}else{if(w){if('g'==o)cwrite(f,OK("200","keep-alive")BLANK);else cwrite(f,OK("204","keep-alive")END204);}else{if('g'==o)cwrite(f,OK("200","close")BLANK);else cwrite(f,OK("204","close")END204);close(f);}}a=k(o?d:-d,"dash",q,xD(a,v),0);b=i+1;if(!o){if(!a){poop(f);R 0;}if(10!=a->t){r0(a);poop(f);R 0;}writer(f,kC(a),a->n);r0(a);if(w)close(f);}if(b==r)R 1;q=0;o=0;a=ktn(11,0),v=ktn(0,0);}else{if((c-m)==10&& !strncasecmp(p+m,"connection",c-m))cf=p[s];js(&a,sn(p+m,c-m));jk(&v,kpn(p+s,e-s));}w=e=g=s=c=0;m=i+1;break;
   case' ':case'\t':case'\r':if(w&&!g)g=i;if(s==(e=i))++s;break;
   case':':if(!c)s=1+(c=i);break;
   case '/':if(!w)w=i+1;case '?':case '&':if(r>=(i+4)&&p[i+1]=='f'&&p[i+2]=='=')o=p[i+3];default: e=0;break;}}if(a)r0(a),r0(v);if(q)r0(q);R b;}
