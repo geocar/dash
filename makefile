@@ -1,5 +1,9 @@
 s=$(shell uname -s | tr A-Z a-z)
-all: d.$(s)
+
+d: d.$(s)
+	cp $< $@.tmp
+	chmod +x $@.tmp
+	mv $@.tmp $@
 
 d.darwin: d.c
 	gcc-5 -pthread -O3 -s -DKXVER=3 -I$(HOME)/q/c -o $@ $< $(HOME)/q/c/m64/c.o 
