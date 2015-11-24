@@ -1,3 +1,11 @@
+[d.c](d.c) is a [very fast](#performance) HTTP-to-KDB proxy.
+
+It supports a synchronous mode which works like a faster `.z.ph` and an asynchronous mode
+which sends the HTTP response before pipelining the messages into KDB.
+
+To implement async, [d.c](d.c#L65) recognises `?f=` in the query string to select the
+HTTP content: `?f=204` for an HTTP 204, and `?f=gif` for a 32-byte blank gif.
+
 #Building
 
 The makefile assumes kdb/q is installed in `$HOME/q` and that you have
@@ -8,27 +16,22 @@ the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
     q/c/m64/c.o
 
 #Usage
-[d.c](d.c) is a special-purpose webserver that always returns a specific
-static content.
-
-A number of tasks involve collecting data from web browsers which
-can basically call a URL, however the URL always responds with
-a HTTP 204 or a blank gif and the actual request can be processed
-after the client disconnects.
-
 Port numbers are configured using environment variables:
 
     http=8080 kdb=127.0.0.1:1234 ./d.darwin
 
 The HTTP response is a blank gif if `?f=gif` is provided in the query string,
-and an HTTP 204 otherwise.
+and an HTTP 204 for `?f=204`.
 
-KDB must implement a function `dash` which takes the HTTP message as an argument.
+KDB must implement a function `dash` which works like `.z.ph`, except note: you must include:
 
+    Connection: keep-alive
+
+in the response when it is appropriate to do so.
 
 #Performance
 
-On a mid-2012 Macbook Air I get about 51k requests per second on localhost:
+On a mid-2012 Macbook Air, for async messages, I get about 51k requests per second on localhost:
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -40,7 +43,23 @@ On a mid-2012 Macbook Air I get about 51k requests per second on localhost:
     Requests/sec:  51310.63
     Transfer/sec:      3.03MB
 
-In comparison, nodeJS gets 10k queries per second:
+and for sync-messages (.z.ph replacement) I get around 25k requests per second:
+
+    Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
+    Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
+      2 threads and 90 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     3.61ms  180.25us   5.59ms   90.24%
+        Req/Sec    12.50k   186.52    12.84k    88.33%
+      74622 requests in 3.00s, 6.55MB read
+    Requests/sec:  24854.81
+    Transfer/sec:      2.18MB
+
+this is using the following:
+
+    dash:{L::(x;y);"HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\n<b>ok"}
+
+In comparison, nodeJS gets 10k queries per second on my laptop:
 
     require("http").createServer(function(req,res){
       res.writeHead(200);res.end()
