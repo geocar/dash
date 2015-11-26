@@ -42,4 +42,11 @@ format[`json]:{.j.j ()xkey select datapoints:(v,'"j"$(t-"p"$1970.01.01)div 10000
 format[`html]:{raze read0 `:d.html}
 format[`svg]:{q:query[x];c:c!#[n:count c:exec distinct k from q;","vs x`colorList];w:pt each x`from`until;h:"J"$x`height;p:dp x;m:10 xexp ceiling 10 xlog exec max v from q;r:abs(-/)w;d:exec "j"$((p-p*("j"$(w 1)-t)%r),'(h*v%m)) by k from q;k:key c;,[.h.hta[`svg;`version`xmlns`viewBox!("1.2";"http://www.w3.org/2000/svg";" "sv string 0 0,p,h)],x1[.h.hta[`rect;string `style`x`y`width`height!(`$"fill:#",(x`bgcolor),";";0;0;p;h)]],raze x1 each .h.hta[`polyline;]each  ([]id:string k;fill:n#enlist"none"; stroke:"#",'c@k; points: " "sv'","sv'' string d@k);"</svg>"]}
 
-.z.ph:{x:(`target _(!/)x),(enlist`target)!enlist x[1]@where`target=first x:"S=&"0:last"?"vs x@0;.h.hy[f;format[f:`$x`format;PX::x]]}
+metrics::string distinct raze {exec distinct k from x}each archive
+find:{a:"."vs' metrics[where metrics like\:b:.h.uh x`query];c:distinct a@'d:count 1_"."vs b;e:max each c~/:\:first each a[where not (1+d)=count each a];.j.j([]text:c;expandable:e)}
+
+bg:{x:(`target _(!/)x),(enlist`target)!enlist x[1]@where`target=first x:"S=&"0:last"?"vs x}
+.z.ph:{PH::x;x:bg x@0;.h.hy[0=count x`query;format[f:`$x`format;PX::x];find[PX::x]]}
+.z.pp:{.h.hy[`json;format[`json;x]]}
+
+

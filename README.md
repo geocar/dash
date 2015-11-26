@@ -19,6 +19,8 @@ The following features are supported:
 * Multiple overlapping `target` wildcards
 * Formats `svg`, `html` (with automatic `refresh` in seconds), and `json`
 
+If your metrics are named sensibly (i.e. dotted) then Grafana can discover metrics automatically.
+
 #d.c
 
 [d.c](d.c) supports a synchronous mode which works like a faster `.z.ph` and an asynchronous mode
