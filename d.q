@@ -45,8 +45,8 @@ format[`svg]:{q:query[x];c:c!#[n:count c:exec distinct k from q;","vs x`colorLis
 metrics::string distinct raze {exec distinct k from x}each archive
 find:{a:"."vs' metrics[where metrics like\:b:.h.uh x`query];c:distinct a@'d:count 1_"."vs b;e:max each c~/:\:first each a[where not (1+d)=count each a];.j.j([]text:c;expandable:e)}
 
-bg:{x:(`target _(!/)x),(enlist`target)!enlist x[1]@where`target=first x:"S=&"0:last"?"vs x}
-.z.ph:{PH::x;x:bg x@0;.h.hy[0=count x`query;format[f:`$x`format;PX::x];find[PX::x]]}
-.z.pp:{.h.hy[`json;format[`json;x]]}
+bg:{x:(`target _(!/)x),(enlist`target)!enlist x[1]@where`target=first x:"S=&"0:last y vs x@0}
+.z.ph:{PH::x;x:bg[x;"?"];PX::x;$[0=count x`query;.h.hy[f;format[f:`$x`format;x]];.h.hy[`json;find[x]]]}
+.z.pp:{PP::x;x:bg[x;" "];.h.hy[`json;format[`json;PX::x]]}
 
 
