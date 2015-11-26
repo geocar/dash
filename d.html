@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html><head><style>
+html,body,img{margin:0;padding:0;width:100%;height:100%;}
+</style><script>
+window.onresize=function(){document.getElementsByTagName('img')[0].src=U()};
+function U(){var q={target:'*',from:'-1day',until:'now',colorList:'6E75B5,7FB148,F28030,22B6F0,58595B'};
+  location.href.split(/\?/).pop().split('&').map(function(x){x=x.split('=');q[x[0]]=x[1]});
+  q.format='svg';q.height=document.body.offsetHeight;q.width=document.body.offsetWidth;q._=(+new Date());if(q.refresh>0)setTimeout(onresize,1000*q.refresh);
+  return '/render?'+Object.keys(q).map(function(k){return k+'='+q[k]}).join('&')}
+</script></head><body><script>
+document.write('<img src="'+U()+'" type="image/svg+xml"></img>')
+</script><noscript>Javascript required</noscript></body></html>

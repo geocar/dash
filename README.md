@@ -1,6 +1,27 @@
-[d.c](d.c) is a [very fast](#performance) HTTP-to-KDB proxy.
+* [d.c](#d.c) is a [very fast](#performance) HTTP-to-KDB proxy.
+* [d.q](#d.q) is a counter and graph-builder.
 
-It supports a synchronous mode which works like a faster `.z.ph` and an asynchronous mode
+#d.q
+
+[d.q](d.q) by default runs on port `1234` and is designed to receive requests from [d.c](d.c) and stores the requests in a table called `buffer`.
+
+`buffer` is periodically (using [.z.ts](http://code.kx.com/wiki/Reference/dotzdotts) and [\\t](http://code.kx.com/wiki/Reference/SystemCommands#.5Ct_.5Bp.5D_-_timer)) scavanged to fill a set of tables called `archive`.
+
+The structure of `archive` is one table per retention policy (set by the table `retain`). This provides a resolution of `retain.r` for at least `retain.p`
+in time zone `retail.z` (only utc, pst, and est currently supported).
+
+The data can be queried using `query` or via HTTP on port `1234` in a format that is mostly compatible with Graphite, e.g.
+
+    http://localhost:1234/render?target=*&from=-2d&until=now&colorList=6E75B5,7FB148,F28030,22B6F0,58595B&format=html&bgcolor=353C41&refresh=1
+
+The following features are supported:
+
+* Multiple overlapping `target` wildcards
+* Formats `svg`, `html` (with automatic `refresh` in seconds), and `json`
+
+#d.c
+
+[d.c](d.c) supports a synchronous mode which works like a faster `.z.ph` and an asynchronous mode
 which sends the HTTP response before pipelining the messages into KDB.
 
 To implement async, [d.c](d.c#L65) recognises `?f=` in the query string to select the
@@ -15,7 +36,7 @@ the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
     q/c/l64/c.o
     q/c/m64/c.o
 
-#Usage
+##Usage
 Port numbers are configured using environment variables:
 
     http=:8080 kdb=127.0.0.1:1234 ./d
@@ -27,8 +48,8 @@ KDB must implement a function `dash` which works like `.z.ph`, except note: you 
 
     Connection: keep-alive
 
-#Performance
-##Setup
+##Performance
+###Setup
 
 KDB+ is configured as:
 
@@ -42,8 +63,8 @@ NodeJS is configured as:
       res.writeHead(200);res.end()
     }).listen(3000)
 
-##OSX 10.11.1 on Mid-2012 Macbook Air (2GHz i7)
-###Async: 51k/sec
+###OSX 10.11.1 on Mid-2012 Macbook Air (2GHz i7)
+####Async: 51k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -55,7 +76,7 @@ NodeJS is configured as:
     Requests/sec:  51310.63
     Transfer/sec:      3.03MB
 
-###Sync (.z.ph replacement): 25k/sec
+####Sync (.z.ph replacement): 25k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
@@ -67,7 +88,7 @@ NodeJS is configured as:
     Requests/sec:  24136.76
     Transfer/sec:      2.12MB
 
-###NodeJS: 10k/sec
+####NodeJS: 10k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d9s 'http://127.0.0.1:3000/'
     Running 9s test @ http://127.0.0.1:3000/
@@ -79,7 +100,7 @@ NodeJS is configured as:
     Requests/sec:  10437.06
     Transfer/sec:      1.12MB
 
-###KDB: 2k/sec
+####KDB: 2k/sec
 
 The motivation for [d.c](d.c).
 
@@ -93,12 +114,12 @@ The motivation for [d.c](d.c).
     Requests/sec:   1804.94
     Transfer/sec:    153.35KB
 
-##Linux 3.18.21 on 3.50GHz XEON
+###Linux 3.18.21 on 3.50GHz XEON
 
 This is a [Cadence Time Series appliance](https://www.scalableinformatics.com/cadence)
 running the 8-core model.
 
-###Async: 135k/sec
+####Async: 135k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -110,7 +131,7 @@ running the 8-core model.
     Requests/sec: 134619.41
     Transfer/sec:      7.96MB
 
-###Sync (.z.ph replacement): 62k/sec
+####Sync (.z.ph replacement): 62k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
@@ -123,7 +144,7 @@ running the 8-core model.
     Transfer/sec:      5.50MB
 
 
-###NodeJS: 21k/sec
+####NodeJS: 21k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:3000/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:3000/?k=hi&v=1
@@ -135,7 +156,7 @@ running the 8-core model.
     Requests/sec:  21424.52
     Transfer/sec:      2.31MB
 
-###KDB: 27k/sec
+####KDB: 27k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:1234/'
     Running 3s test @ http://127.0.0.1:1234/
