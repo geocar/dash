@@ -23,7 +23,7 @@ rollup:`n`v`v2!((count;1);(sum;`v);(sum;(*;`v;`v)));aggr:`n`v`v2!((sum;`n);(sum;
 base:([t:`timestamp$();k:`symbol$()] n:`long$(); v:`float$(); v2:`float$())
 
 prune1:{archive[x]:![archive@x;enlist (<;`t;.z.p-y);0b;`symbol$()]}
-prune:{a:akey each b:select from retain where p<>0W;a prune1'b.p}
+prune:{a:akey each b:select from retain where p<>0W;a prune1'b`p}
 
 combine:{k:akey z;a:archive[k],:base;b:?[x;y 0;timebd[z];y 1];p:exec a:min t,b:max t from b;archive[k]-:select from a where t within (value p);archive[k]+:b;}
 batch2:{a:a@b:first key a:exec max r by z from retain where r<buffersize;c:archive[akey`z`r!(b;a)];combine[c;(();aggr)]each select distinct z,r from retain where r>=buffersize;}
