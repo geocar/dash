@@ -49,6 +49,8 @@ KDB must implement a function `dash` which works like `.z.ph`, except note: you 
     Connection: keep-alive
 
 ##Performance
+[d.c](d.c) is very fast.
+
 ###Setup
 
 KDB+ is configured as:
