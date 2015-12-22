@@ -1,5 +1,5 @@
-* [d.c](#d.c) is a [very fast](#performance) HTTP-to-KDB proxy.
-* [d.q](#d.q) is a counter and graph-builder.
+* [d.c](#dc) is a [very fast](#performance) HTTP-to-KDB proxy.
+* [d.q](#dq) is a counter and graph-builder.
 
 #d.q
 
