@@ -6,6 +6,14 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <sys/types.h>
+#ifndef __APPLE__
+#define _GNU_SOURCE
+#define accept_noblock(s) accept4(s,0,0,SOCK_NONBLOCK)
+#else
+#define accept_noblock(s) (f=accept(s,0,0),fcntl(f,F_SETFL,O_NONBLOCK),f)
+#define
+#endif
+
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 #include <sys/time.h>
@@ -70,7 +78,7 @@ ZV*run(I n){I*s=kI(td)+n;C q[QSZ*NM],b[8192];I h,r,f,k,d,c,sd=69; sa(n+1);d=khpu
   pthread_mutex_lock(&tm);k=*s=Qq();pthread_mutex_unlock(&tm);pthread_cond_signal(&tc);//async
   for(c=-1;;){DO(h=Qw(k,q,c),if(f=Qf(k,q+i*QSZ))if((r=read(f,b,sizeof(b)))==sizeof(b))poop(f);else if(r>0)if(http(d,f,b,r,&sd))c=1);if(h<=0){sc(d,0,&sd);sc(d,1,&sd);c=-1;}}
 }
-ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=5;for(;;)if(-1!=(f=accept(s,0,0))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));fcntl(f,F_SETFL,O_NONBLOCK);Qa(kI(td)[r],f);++r;r=r%t;}}
+ZV loop(I s,I t){struct timeval tv={0};I f,r=0;tv.tv_sec=5;for(;;)if(-1!=(f=accept_noblock(s))){setsockopt(f,SOL_SOCKET,SO_RCVTIMEO,&tv,sizeof(tv));Qa(kI(td)[r],f);++r;r=r%t;}}
 ZI busy(I t){DO(t,if(((volatile)kI(td)[t])==-1)R 1);R 0;}
 ZS var(S x,S d){R (x=getenv(x))?x:d;}ZS hp(S x,I*p,I d){S c=strchr(x=strdup(x),':');*p=d;P(!c,x);*p=atoi(c+1);*c=0;R x;}
 int main(int argc,char *argv[]){
