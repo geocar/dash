@@ -11,7 +11,6 @@
 #define accept_noblock(s) accept4(s,0,0,SOCK_NONBLOCK)
 #else
 #define accept_noblock(s) (f=accept(s,0,0),fcntl(f,F_SETFL,O_NONBLOCK),f)
-#define
 #endif
 
 #include <sys/socket.h>
