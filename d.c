@@ -52,7 +52,7 @@ ZV sc(I f,I b,I*g){if(*g!=b)*g=b,setsockopt(f,IPPROTO_TCP,TCP_NOPUSH,&b,sizeof(b
 #ifdef __APPLE__
 extern int thread_policy_set(thread_t thread, thread_policy_flavor_t flavor, thread_policy_t policy_info, mach_msg_type_number_t count);
 {thread_extended_policy_data_t ep;ep.timeshare=FALSE;thread_policy_set(mach_thread_self(),THREAD_EXTENDED_POLICY,(thread_policy_t)&ep,THREAD_EXTENDED_POLICY_COUNT);
-};{thread_affinity_policy_data_t ap;ap.affinity_tag=n+1;thread_policy_set(mach_thread_self(),THREAD_EXTENDED_POLICY,(thread_policy_t)&ap,THREAD_EXTENDED_POLICY_COUNT);};
+};{thread_affinity_policy_data_t ap;ap.affinity_tag=n+1;thread_policy_set(mach_thread_self(),THREAD_AFFINITY_POLICY,(thread_policy_t)&ap,THREAD_AFFINITY_POLICY_COUNT);};
 #else
 {cpu_set_t c;CPU_ZERO(&c);CPU_SET(n,&c);pthread_setaffinity_np(pthread_self(),sizeof(c),&c);}
 #endif
