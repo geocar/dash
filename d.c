@@ -1,17 +1,17 @@
-#include "k.h"
-
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/types.h>
 #ifndef __APPLE__
 #define _GNU_SOURCE
 #define accept_noblock(s) accept4(s,0,0,SOCK_NONBLOCK)
 #else
 #define accept_noblock(s) (f=accept(s,0,0),fcntl(f,F_SETFL,O_NONBLOCK),f)
 #endif
+
+#include "k.h"
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/types.h>
 
 #include <sys/socket.h>
 #include <netinet/tcp.h>
@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <netdb.h>
 #include <errno.h>
-#define WANT 2048 
+#define WANT 2048
 #define EXTRA 32
 ZI oops(S x){perror(x);exit(1);}
 #ifdef __APPLE__
@@ -30,6 +30,8 @@ ZI oops(S x){perror(x);exit(1);}
 #include <mach/mach_traps.h>
 #else
 #include <pthread_np.h>
+#include <sys/resource.h>
+#include <sched.h>
 #endif
 
 static pthread_mutex_t tm=PTHREAD_MUTEX_INITIALIZER;static pthread_cond_t tc=PTHREAD_COND_INITIALIZER;
