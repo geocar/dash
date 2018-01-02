@@ -1,7 +1,7 @@
 * [d.c](#dc) is a [very fast](#performance) HTTP-to-KDB proxy.
 * [d.q](#dq) is a counter and graph-builder.
 
-#d.q
+# d.q
 
 [d.q](d.q) by default runs on port `1234` and is designed to receive requests from [d.c](d.c) and stores the requests in a table called `buffer`.
 
@@ -21,7 +21,7 @@ The following features are supported:
 
 If your metrics are named sensibly (i.e. dotted) then Grafana can discover metrics automatically.
 
-#d.c
+# d.c
 
 [d.c](d.c) supports a synchronous mode which works like a faster `.z.ph` and an asynchronous mode
 which sends the HTTP response before pipelining the messages into KDB.
@@ -29,7 +29,7 @@ which sends the HTTP response before pipelining the messages into KDB.
 To implement async, [d.c](d.c#L65) recognises `?f=` in the query string to select the
 HTTP content: `?f=204` for an HTTP 204, and `?f=gif` for a 32-byte blank gif.
 
-#Building
+# Building
 
 The makefile assumes kdb/q is installed in `$HOME/q` and that you have
 the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
@@ -38,7 +38,7 @@ the [C bindings](http://kx.com/q/d/c.htm) installed in `$HOME/q/c`:
     q/c/l64/c.o
     q/c/m64/c.o
 
-##Usage
+## Usage
 Port numbers are configured using environment variables:
 
     http=:8080 kdb=127.0.0.1:1234 ./d
@@ -50,10 +50,10 @@ KDB must implement a function `dash` which works like `.z.ph`, except note: you 
 
     Connection: keep-alive
 
-##Performance
+## Performance
 [d.c](d.c) is very fast.
 
-###Setup
+### Setup
 
 KDB+ is configured as:
 
@@ -67,8 +67,8 @@ NodeJS is configured as:
       res.writeHead(200);res.end()
     }).listen(3000)
 
-###OSX 10.11.1 on Mid-2012 Macbook Air (2GHz i7)
-####Async: 51k/sec
+### OSX 10.11.1 on Mid-2012 Macbook Air (2GHz i7)
+#### Async: 51k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -80,7 +80,7 @@ NodeJS is configured as:
     Requests/sec:  51310.63
     Transfer/sec:      3.03MB
 
-####Sync (.z.ph replacement): 25k/sec
+#### Sync (.z.ph replacement): 25k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
@@ -92,7 +92,7 @@ NodeJS is configured as:
     Requests/sec:  24136.76
     Transfer/sec:      2.12MB
 
-####NodeJS: 10k/sec
+#### NodeJS: 10k/sec
 
     Geos-Air:~ geocar$ wrk -t2 -c90 -d9s 'http://127.0.0.1:3000/'
     Running 9s test @ http://127.0.0.1:3000/
@@ -104,7 +104,7 @@ NodeJS is configured as:
     Requests/sec:  10437.06
     Transfer/sec:      1.12MB
 
-####KDB: 2k/sec
+#### KDB: 2k/sec
 
 The motivation for [d.c](d.c).
 
@@ -118,12 +118,12 @@ The motivation for [d.c](d.c).
     Requests/sec:   1804.94
     Transfer/sec:    153.35KB
 
-###Linux 3.18.21 on 3.50GHz XEON
+### Linux 3.18.21 on 3.50GHz XEON
 
 This is a [Cadence Time Series appliance](https://www.scalableinformatics.com/cadence)
 running the 8-core model.
 
-####Async: 135k/sec
+#### Async: 135k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?f=204&k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?f=204&k=hi&v=1
@@ -135,7 +135,7 @@ running the 8-core model.
     Requests/sec: 134619.41
     Transfer/sec:      7.96MB
 
-####Sync (.z.ph replacement): 62k/sec
+#### Sync (.z.ph replacement): 62k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:8080/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:8080/?k=hi&v=1
@@ -148,7 +148,7 @@ running the 8-core model.
     Transfer/sec:      5.50MB
 
 
-####NodeJS: 21k/sec
+#### NodeJS: 21k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:3000/?k=hi&v=1'
     Running 3s test @ http://127.0.0.1:3000/?k=hi&v=1
@@ -160,7 +160,7 @@ running the 8-core model.
     Requests/sec:  21424.52
     Transfer/sec:      2.31MB
 
-####KDB: 27k/sec
+#### KDB: 27k/sec
 
     $ ./wrk -t2 -c90 -d3s 'http://127.0.0.1:1234/'
     Running 3s test @ http://127.0.0.1:1234/
